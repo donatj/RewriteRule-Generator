@@ -37,7 +37,7 @@ if( $_POST ) {
 	}
 }else{
 	$_POST['desc_comments'] = 1;
-	$_POST['tabbed_rewrites'] = "http://www.test.com/test.html	http://www.test.com/spiders.html" . PHP_EOL . "http://www.test.com/faq.html?faq=13	http://www.test.com/faqs.html?id=10" . PHP_EOL . "text/faq.html?faq=20	helpdesk/kb.php";
+	$_POST['tabbed_rewrites'] = "http://www.test.com/test.html	http://www.test.com/spiders.html" . PHP_EOL . "http://www.test.com/faq.html?faq=13&layout=bob	http://www.test.com/faqs.html" . PHP_EOL . "text/faq.html?faq=20	helpdesk/kb.php";
 }
 
 ?>
