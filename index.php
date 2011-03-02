@@ -15,7 +15,14 @@ if( $_POST ) {
 	$str = '';
 	if( strlen(trim($_POST['tabbed_rewrites'])) ) {
 		foreach( $lines as $line ) {
+			$line = trim($line);
+			if( $line == '' ) continue;
 			$ab = explode("	", $line);
+			
+			if( count($ab) != 2 ) {
+				$str .= PHP_EOL . '# MALFORMED LINE SKIPPED: ' . $line . PHP_EOL;
+				continue;
+			}
 
 			$ab0p = parse_url( trim($ab[0]) );
 			$ab1p = parse_url( trim($ab[1]) );
