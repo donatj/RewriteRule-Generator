@@ -29,6 +29,13 @@ if( $_POST ) {
 
 			if( $_POST['desc_comments'] ) { $str .= PHP_EOL . '# '.$_POST['type'].' --- ' . $ab[0] . ' => ' . $ab[1] . PHP_EOL; }
 			
+			if( $ab0p['host'] != $ab1p['host'] ) {
+				$str .= 'RewriteCond %{HTTP_HOST} ^'.quotemeta($ab0p['host']).'$';
+				$str .= PHP_EOL;
+				$prefix = $ab1p['scheme'] . '://' . $ab1p['host'] . '/';
+			}else{
+				$prefix = '/';
+			}
 
 			$ab0pqs = explode('&', $ab0p['query']);
 			foreach( $ab0pqs as $qs ) {
@@ -38,14 +45,13 @@ if( $_POST ) {
 				}
 			}
 
-			$str .= 'RewriteRule ^'.quotemeta(ltrim($ab0p['path'],'/')).'$ '.ltrim( $ab1p['path'], '/' ).'?'.$ab1p['query'] . ( $_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}':' [L,R=301]' );
+			$str .= 'RewriteRule ^'.quotemeta(ltrim($ab0p['path'],'/')).'$ '.$prefix.ltrim( $ab1p['path'], '/' ).'?'.$ab1p['query'] . ( $_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}':' [L,R=301]' );
 			$str .= PHP_EOL;
-
 		}
 	}
 }else{
 	$_POST['desc_comments'] = 1;
-	$_POST['tabbed_rewrites'] = "http://www.test.com/test.html	http://www.test.com/spiders.html" . PHP_EOL . "http://www.test.com/faq.html?faq=13&layout=bob	http://www.test.com/faqs.html" . PHP_EOL . "text/faq.html?faq=20	helpdesk/kb.php";
+	$_POST['tabbed_rewrites'] = "http://www.test.com/test.html	http://www.test.com/spiders.html" . PHP_EOL . "http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html" . PHP_EOL . "text/faq.html?faq=20	helpdesk/kb.php";
 }
 
 ?>
