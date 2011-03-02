@@ -27,7 +27,8 @@ if( $_POST ) {
 			$ab0p = parse_url( trim($ab[0]) );
 			$ab1p = parse_url( trim($ab[1]) );
 
-			if( $_POST['desc_comments'] ) { $str .= PHP_EOL . '#   ---   ' . $ab[0] . ' => ' . $ab[1] . PHP_EOL; }
+			if( $_POST['desc_comments'] ) { $str .= PHP_EOL . '# '.$_POST['type'].' --- ' . $ab[0] . ' => ' . $ab[1] . PHP_EOL; }
+			
 
 			$ab0pqs = explode('&', $ab0p['query']);
 			foreach( $ab0pqs as $qs ) {
