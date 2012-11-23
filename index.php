@@ -2,51 +2,82 @@
 
 /**
 * RewriteRule Generator
-* 
+*
 * @license MIT
 * @author Jesse G. Donat <donatj@gmail.com> http://donatstudios.com
-* 
+*
 */
+
+function sortByQueryLen($a, $b) {
+	if (count($a['query']) == count($b['query'])) {
+		return 0;
+	}
+	return (count($a['query']) > count($b['query'])) ? -1 : 1;
+}
 
 if( $_POST ) {
 	$_POST['tabbed_rewrites'] = preg_replace('/(\t| )+/', '	', $_POST['tabbed_rewrites']); // Spacing Cleanup
 	$lines = explode(PHP_EOL, $_POST['tabbed_rewrites'] );
 
-	$str = '';
+	$rules = array();
+	$i = -1;
+
 	if( strlen(trim($_POST['tabbed_rewrites'])) ) {
 		foreach( $lines as $line ) {
+			$rule = array();
+			$type = 0;
 			$line = trim($line);
 			if( $line == '' ) continue;
+			$i++;
 			$ab = explode("	", $line);
-			
+
 			if( count($ab) != 2 ) {
-				$str .= PHP_EOL . '# MALFORMED LINE SKIPPED: ' . $line . PHP_EOL;
+				$rule['error'] = '# MALFORMED LINE SKIPPED: ' . $line;
+				$rules[$type][] = $rule;
 				continue;
 			}
 
 			$ab0p = parse_url( trim($ab[0]) );
 			$ab1p = parse_url( trim($ab[1]) );
 
-			if( $_POST['desc_comments'] ) { $str .= PHP_EOL . '# '.$_POST['type'].' --- ' . $ab[0] . ' => ' . $ab[1] . PHP_EOL; }
-			
+			if( $_POST['desc_comments'] ) {
+				$rule['0'] = '# '.$_POST['type'].' --- ' . $ab[0] . ' => ' . $ab[1];
+			}
+
 			if( $ab0p['host'] != $ab1p['host'] ) {
-				$str .= 'RewriteCond %{HTTP_HOST} ^'.quotemeta($ab0p['host']).'$';
-				$str .= PHP_EOL;
+				$rule['httphost'] = 'RewriteCond %{HTTP_HOST} ^'.quotemeta($ab0p['host']).'$';
+				$type = '3';
 				$prefix = $ab1p['scheme'] . '://' . $ab1p['host'] . '/';
 			}else{
 				$prefix = '/';
+				$type = '4';
 			}
 
 			$ab0pqs = explode('&', $ab0p['query']);
+			if ($ab0pqs > 0 && strlen($ab0pqs[0]))
+				$type = ($type === '3') ? '1' : '2';
 			foreach( $ab0pqs as $qs ) {
 				if( strlen( $qs ) > 0 ) {
-					$str .= 'RewriteCond %{QUERY_STRING} (^|&)'. quotemeta($qs) .'($|&)';
-					$str .= PHP_EOL;
+					$rule['query'][] = 'RewriteCond %{QUERY_STRING} (^|&)'. quotemeta($qs) .'($|&)';
 				}
 			}
 
-			$str .= 'RewriteRule ^'.quotemeta(ltrim($ab0p['path'],'/')).'$ '.$prefix.ltrim( $ab1p['path'], '/' ).'?'.$ab1p['query'] . ( $_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}':' [L,R=301]' );
-			$str .= PHP_EOL;
+			$rule['rule'] = 'RewriteRule ^'.quotemeta(ltrim($ab0p['path'],'/')).'$ '.$prefix.ltrim( $ab1p['path'], '/' ).'?'.$ab1p['query'] . ( $_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}':' [L,R=301]' );
+			$rules[$type][] = $rule;
+		}
+		if ($i !== -1) {
+			ksort($rules);
+			foreach ($rules as &$t) {
+				usort($t, 'sortByQueryLen');
+				foreach ($t as &$r) {
+					if (array_key_exists('query', $r)) {
+						$r['query'] = implode(PHP_EOL, $r['query']);
+					}
+					$r = implode(PHP_EOL, $r);
+				}
+				$t = implode(PHP_EOL . PHP_EOL, $t);
+			}
+			$rules = implode(PHP_EOL . PHP_EOL, $rules);
 		}
 	}
 }else{
@@ -63,6 +94,6 @@ if( $_POST ) {
 	</select>
 	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?>>Comments</label>
 	<br />
-	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%;"><?php echo htmlentities($str) ?></textarea><br />
+	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%;"><?php echo htmlentities($rules) ?></textarea><br />
 	<center><input type="submit" /></center>
 </form>
