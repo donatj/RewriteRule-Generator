@@ -86,14 +86,14 @@ if( $_POST ) {
 }
 
 ?>
-<form method="post">
-	<textarea cols="100" rows="20" name="tabbed_rewrites" style="width: 100%;"><?php echo htmlentities( $_POST['tabbed_rewrites'] ) ?></textarea><br />
-	<select name="type">
+<form method="post" class="htaccess-rewrites">
+	<textarea cols="100" rows="20" name="tabbed_rewrites" class="rewrite-field tabbed"><?php echo htmlentities( $_POST['tabbed_rewrites'] ) ?></textarea><br />
+	<select name="type" class="method">
 		<option>301</option>
 		<option<?php echo $_POST['type'] == 'Rewrite' ? ' selected="selected"' : '' ?>>Rewrite</option>
 	</select>
-	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?>>Comments</label>
+	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?> class="comments">Comments</label>
 	<br />
-	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%;"><?php echo htmlentities($rules) ?></textarea><br />
-	<center><input type="submit" /></center>
+	<textarea cols="100" rows="20" readonly="readonly" class="rewrite-field output"><?php echo htmlentities($rules) ?></textarea><br />
+	<input type="submit" />
 </form>
