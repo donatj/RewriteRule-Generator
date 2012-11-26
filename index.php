@@ -8,6 +8,15 @@
 *
 */
 
+/**
+ * Sort an array based on the length of $array['query']
+ * This function is used in usort.
+ *
+ * @param $a
+ * @param $b
+ *
+ * @return int
+ */
 function sortByQueryLen($a, $b) {
 	if (count($a['query']) == count($b['query'])) {
 		return 0;
