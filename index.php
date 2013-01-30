@@ -53,7 +53,7 @@ if( $_POST ) {
 				$rule['0'] = '# '.$_POST['type'].' --- ' . $ab[0] . ' => ' . $ab[1];
 			}
 
-			if( $ab0p['host'] != $ab1p['host'] ) {
+			if( $ab0p['host'] != $ab1p['host'] || ($_POST['always_show_host'] && isset($ab0p['host']))) {
 				$rule['httphost'] = 'RewriteCond %{HTTP_HOST} ^'.quotemeta($ab0p['host']).'$';
 				$type = '3';
 				$prefix = $ab1p['scheme'] . '://' . $ab1p['host'] . '/';
@@ -102,6 +102,7 @@ if( $_POST ) {
 		<option<?php echo $_POST['type'] == 'Rewrite' ? ' selected="selected"' : '' ?>>Rewrite</option>
 	</select>
 	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?> class="comments">Comments</label>
+    <label><input type="checkbox" name="always_show_host" value="1"<?php echo $_POST['always_show_host'] ? ' checked="checked"' : '' ?> class="host">Always add {HTTP_HOST} condition (f.i. multi-domain sites)</label>
 	<br />
 	<textarea cols="100" rows="20" readonly="readonly" class="rewrite-field output"><?php echo htmlentities($rules) ?></textarea><br />
 	<input type="submit" />
