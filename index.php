@@ -56,13 +56,13 @@ if( $_POST ) {
 
 ?>
 <form method="post">
-	<textarea cols="100" rows="20" name="tabbed_rewrites" style="width: 100%;"><?php echo htmlentities( $_POST['tabbed_rewrites'] ) ?></textarea><br />
+	<textarea cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;"><?php echo htmlentities( $_POST['tabbed_rewrites'] ) ?></textarea><br />
 	<select name="type">
 		<option>301</option>
 		<option<?php echo $_POST['type'] == 'Rewrite' ? ' selected="selected"' : '' ?>>Rewrite</option>
 	</select>
 	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?>>Comments</label>
 	<br />
-	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%;"><?php echo htmlentities($str) ?></textarea><br />
+	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;"><?php echo htmlentities($str) ?></textarea><br />
 	<center><input type="submit" /></center>
 </form>
