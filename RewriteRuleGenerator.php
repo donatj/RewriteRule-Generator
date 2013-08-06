@@ -86,33 +86,36 @@ class RewriteRuleGenerator
 	{
 		$source		= parse_url($line[0]);
 		$target		= parse_url($line[1]);
-		$queries 	= explode('&', $source['query']);
+		$queries 	= isset($source['query']) ? explode('&', $source['query']) : 0;
 		$type		= 3;
 		$rule		= array();
 
 		if ($this->_post['desc_comments'])
 			$rule['comment']	= $this->_getComment($line[0], $line[1]);
 
-		if ($source['host'] != $target['host'] ||
-			($this->_post['always_show_host'] && isset($source['host']))) {
-			$rule['httphost']	= sprintf(self::HTTP_HOST, quotemeta($source['host']));
-			$prefix				= $target['scheme'] . '://' . $target['host'] . '/';
-		} else {
-			$type				= 4;
-			$prefix				= '/';
+		if (isset($source['host']) && isset ($target['host'])) {
+			if ($source['host'] != $target['host'] ||
+				($this->_post['always_show_host'] && isset($source['host']))) {
+				$rule['httphost']	= sprintf(self::HTTP_HOST, quotemeta($source['host']));
+				$prefix				= $target['scheme'] . '://' . $target['host'] . '/';
+			} else {
+				$type				= 4;
+				$prefix				= '/';
+			}
 		}
 
-		if ($queries > 0 && strlen($queries[0]))
+		if (count($queries) > 0 && strlen($queries[0])) {
 			$type = ($type === 3) ? 1 : 2;
-		foreach ($queries as $query) {
-			if (strlen($query) > 0) {
-				$rule['query'][] = sprintf(self::QUERY_STRING, quotemeta($query));
+			foreach ($queries as $query) {
+				if (strlen($query) > 0) {
+					$rule['query'][] = sprintf(self::QUERY_STRING, quotemeta($query));
+				}
 			}
 		}
 
 		$rule['rule'] = sprintf($this->_ruleType,
-			quotemeta(ltrim($source['path'], '/')), $prefix,
-			ltrim( $target['path'], '/' ), $target['query']);
+			quotemeta(ltrim($source['path'], '/')), isset($prefix) ? $prefix : '',
+			ltrim( $target['path'], '/' ), isset($target['query']) ? $target['query'] : '');
 
 		$this->_rules[$type][] = $rule;
 	}
@@ -135,7 +138,7 @@ class RewriteRuleGenerator
 	{
 		ksort($this->_rules);
 		foreach ($this->_rules as &$rule) {
-			usort($rule, array('RewriteRuleGen', 'sortByQueryLen'));
+			usort($rule, array('RewriteRuleGenerator', '_sortByQueryLen'));
 			foreach ($rule as &$condition) {
 				if (array_key_exists('query', $condition))
 					$condition['query'] = implode(PHP_EOL, $condition['query']);
@@ -158,8 +161,8 @@ class RewriteRuleGenerator
 		$this->_post = false;
 		if ($_POST && strlen(trim($_POST['tabbed_rewrites'])))
 			$this->_post = array(
-				'always_show_host'	=> (bool)$_POST['always_show_host'],
-				'desc_comments'		=> (bool)$_POST['desc_comments'],
+				'always_show_host'	=> isset($_POST['always_show_host']),
+				'desc_comments'		=> isset($_POST['desc_comments']),
 				'tabbed_rewrites'	=> explode(PHP_EOL, $_POST['tabbed_rewrites']),
 				'type'				=> $_POST['type'],
 			);
