@@ -115,7 +115,7 @@ class RewriteRuleGenerator
 
 		$rule['rule'] = sprintf($this->_ruleType,
 			quotemeta(ltrim($source['path'], '/')), isset($prefix) ? $prefix : '',
-			ltrim( $target['path'], '/' ), isset($target['query']) ? $target['query'] : '');
+			ltrim( isset($target['path']) ? $target['path'] : '', '/' ), isset($target['query']) ? $target['query'] : '');
 
 		$this->_rules[$type][] = $rule;
 	}
@@ -249,6 +249,9 @@ class RewriteRuleGenerator
 	 * @return int
 	 */
 	protected function _sortByQueryLen($a, $b) {
+		$a['query'] = isset($a['query']) ? $a['query'] : array();
+		$b['query'] = isset($b['query']) ? $b['query'] : array();
+
 		if (count($a['query']) == count($b['query']))
 			return 0;
 		return (count($a['query']) > count($b['query'])) ? -1 : 1;
