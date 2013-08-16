@@ -93,16 +93,19 @@ class RewriteRuleGenerator
 		if ($this->_post['desc_comments'])
 			$rule['comment']	= $this->_getComment($line[0], $line[1]);
 
-		if (isset($source['host']) && isset ($target['host'])) {
-			if ($source['host'] != $target['host'] ||
-				($this->_post['always_show_host'] && isset($source['host']))) {
+		if (!isset($source['host'])) $source['host'] = '';
+		if (!isset($target['host'])) $target['host'] = '';
+
+		if ($source['host'] != $target['host'] ||
+			($this->_post['always_show_host'] && isset($source['host']))) {
+			if ($source['host'] !== '')
 				$rule['httphost']	= sprintf(self::HTTP_HOST, quotemeta($source['host']));
-				$prefix				= $target['scheme'] . '://' . $target['host'] . '/';
-			} else {
-				$type				= 4;
-				$prefix				= '/';
-			}
+			$prefix				= $target['scheme'] . '://' . $target['host'] . '/';
+		} else {
+			$type				= 4;
+			$prefix				= '/';
 		}
+
 
 		if (count($queries) > 0 && strlen($queries[0])) {
 			$type = ($type === 3) ? 1 : 2;
