@@ -54,7 +54,11 @@ if( $_POST['tabbed_rewrites'] ) {
 	}
 } else {
 	$_POST['desc_comments']   = 1;
-	$_POST['tabbed_rewrites'] = "http://www.test.com/test.html	http://www.test.com/spiders.html" . PHP_EOL . "http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html" . PHP_EOL . "text/faq.html?faq=20	helpdesk/kb.php";
+	$_POST['tabbed_rewrites'] = <<<EOD
+http://www.test.com/test.html	http://www.test.com/spiders.html
+http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html
+text/faq.html?faq=20	helpdesk/kb.php
+EOD;
 }
 
 ?>
