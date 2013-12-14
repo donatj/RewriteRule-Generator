@@ -8,6 +8,8 @@
  *
  */
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 $output = '';
 
 if( $_POST['tabbed_rewrites'] ) {
