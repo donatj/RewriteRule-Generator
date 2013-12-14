@@ -12,6 +12,43 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 $output = '';
 
+/**
+ * @param string $from
+ * @param string $to
+ * @param bool $show_comments
+ * @return string
+ */
+function generateApacheRewrite( $from, $to, $show_comments ) {
+	$parsedFrom = parse_url(trim($from));
+	$parsedTo   = parse_url(trim($to));
+
+	$line_output = "";
+	if( $show_comments ) {
+		$line_output .= PHP_EOL . '# ' . $_POST['type'] . ' --- ' . $from . ' => ' . $to . PHP_EOL;
+	}
+
+	if( $parsedFrom['host'] != $parsedTo['host'] ) {
+		$line_output .= 'RewriteCond %{HTTP_HOST} ^' . quotemeta($parsedFrom['host']) . '$';
+		$line_output .= PHP_EOL;
+		$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
+	} else {
+		$prefix = '/';
+	}
+
+	$explodedQuery = explode('&', $parsedFrom['query']);
+	foreach( $explodedQuery as $qs ) {
+		if( strlen($qs) > 0 ) {
+			$line_output .= 'RewriteCond %{QUERY_STRING} (^|&)' . quotemeta($qs) . '($|&)';
+			$line_output .= PHP_EOL;
+		}
+	}
+
+	$line_output .= 'RewriteRule ^' . quotemeta(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
+	$line_output .= PHP_EOL;
+
+	return $line_output;
+}
+
 if( $_POST['tabbed_rewrites'] ) {
 	$_POST['tabbed_rewrites'] = preg_replace('/(\t| )+/', '	', $_POST['tabbed_rewrites']); // Spacing Cleanup
 	$lines                    = explode(PHP_EOL, $_POST['tabbed_rewrites']);
@@ -27,31 +64,9 @@ if( $_POST['tabbed_rewrites'] ) {
 				continue;
 			}
 
-			$parsedFrom = parse_url(trim($explodedLine[0]));
-			$parsedTo   = parse_url(trim($explodedLine[1]));
+			$line_output = generateApacheRewrite($explodedLine[0], $explodedLine[1], (bool)$_POST['desc_comments']);
 
-			if( $_POST['desc_comments'] ) {
-				$output .= PHP_EOL . '# ' . $_POST['type'] . ' --- ' . $explodedLine[0] . ' => ' . $explodedLine[1] . PHP_EOL;
-			}
-
-			if( $parsedFrom['host'] != $parsedTo['host'] ) {
-				$output .= 'RewriteCond %{HTTP_HOST} ^' . quotemeta($parsedFrom['host']) . '$';
-				$output .= PHP_EOL;
-				$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
-			} else {
-				$prefix = '/';
-			}
-
-			$explodedQuery = explode('&', $parsedFrom['query']);
-			foreach( $explodedQuery as $qs ) {
-				if( strlen($qs) > 0 ) {
-					$output .= 'RewriteCond %{QUERY_STRING} (^|&)' . quotemeta($qs) . '($|&)';
-					$output .= PHP_EOL;
-				}
-			}
-
-			$output .= 'RewriteRule ^' . quotemeta(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
-			$output .= PHP_EOL;
+			$output .= $line_output;
 		}
 	}
 } else {
