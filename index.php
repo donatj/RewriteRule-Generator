@@ -79,14 +79,50 @@ EOD;
 }
 
 ?>
+<script src="//ajax.googleapis.com/ajax/libs/mootools/1.2.2/mootools-yui-compressed.js"></script>
+<script>
+	window.addEvent('domready', function() {
+		var insertAtCursor = function( myField, myValue ) {
+			//IE support
+			if( document.selection ) {
+				myField.focus();
+				sel = document.selection.createRange();
+				sel.text = myValue;
+			}
+			//MOZILLA/NETSCAPE support
+			else if( myField.selectionStart || myField.selectionStart == '0' ) {
+				var startPos = myField.selectionStart;
+				var endPos = myField.selectionEnd;
+				myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+				myField.selectionEnd = myField.selectionStart = startPos + myValue.length;
+			} else {
+				myField.value += myValue;
+			}
+		};
+
+		var input = $('tsv-input');
+		var output = $('rewrite-output');
+
+		input.addEvent('keydown', function( e ) {
+			if( e.key == 'tab' ) {
+				e.stop();
+				insertAtCursor(e.target, "\t");
+			}
+		});
+
+		output.addEvent('click', function( e ) {
+			e.target.select();
+		});
+	});
+</script>
 <form method="post">
-	<textarea cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;"><?php echo htmlentities($_POST['tabbed_rewrites']) ?></textarea><br />
+	<textarea id="tsv-input" cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;"><?php echo htmlentities($_POST['tabbed_rewrites']) ?></textarea><br />
 	<select name="type">
 		<option>301</option>
 		<option<?php echo $_POST['type'] == 'Rewrite' ? ' selected="selected"' : '' ?>>Rewrite</option>
 	</select>
 	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?>>Comments</label>
 	<br />
-	<textarea cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;"><?php echo htmlentities($output) ?></textarea><br />
+	<textarea id="rewrite-output" cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;"><?php echo htmlentities($output) ?></textarea><br />
 	<center><input type="submit" /></center>
 </form>
