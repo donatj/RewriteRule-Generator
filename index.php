@@ -15,7 +15,7 @@ $output = '';
 /**
  * @param string $from
  * @param string $to
- * @param bool $show_comments
+ * @param bool   $show_comments
  * @return string
  */
 function generateApacheRewrite( $from, $to, $show_comments ) {
