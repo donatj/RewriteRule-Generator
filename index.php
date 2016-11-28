@@ -8,8 +8,9 @@
  *
  */
 
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 
+$errors = 0;
 $output = '';
 
 /**
@@ -18,16 +19,16 @@ $output = '';
  * @param bool   $show_comments
  * @return string
  */
-function generateApacheRewrite( $from, $to, $show_comments ) {
+function generateApacheRewrite( $from, $to ) {
 	$parsedFrom = parse_url(trim($from));
 	$parsedTo   = parse_url(trim($to));
 
 	$line_output = "";
-	if( $show_comments ) {
-		$line_output .= PHP_EOL . '# ' . $_POST['type'] . ' --- ' . $from . ' => ' . $to . PHP_EOL;
-	}
 
-	if( $parsedFrom['host'] != $parsedTo['host'] ) {
+
+	if( !$parsedFrom['host'] && $parsedTo['host'] ) {
+		throw new Exception('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
+	} elseif( $parsedFrom['host'] != $parsedTo['host'] && $parsedTo['host'] ) {
 		$line_output .= 'RewriteCond %{HTTP_HOST} ^' . quotemeta($parsedFrom['host']) . '$';
 		$line_output .= PHP_EOL;
 		$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
@@ -51,29 +52,43 @@ function generateApacheRewrite( $from, $to, $show_comments ) {
 
 if( $_POST['tabbed_rewrites'] ) {
 	$_POST['tabbed_rewrites'] = preg_replace('/(\t| )+/', '	', $_POST['tabbed_rewrites']); // Spacing Cleanup
-	$lines                    = explode(PHP_EOL, $_POST['tabbed_rewrites']);
+
+	$lines = explode(PHP_EOL, $_POST['tabbed_rewrites']);
 
 	if( strlen(trim($_POST['tabbed_rewrites'])) ) {
 		foreach( $lines as $line ) {
 			$line = trim($line);
 			if( $line == '' ) continue;
-			$explodedLine = explode("	", $line);
+			$explodedLine = explode("\t", $line);
 
 			if( count($explodedLine) != 2 ) {
-				$output .= PHP_EOL . '# MALFORMED LINE SKIPPED: ' . $line . PHP_EOL;
+				$output .= PHP_EOL . '# ERROR: Malformed Line Skipped: ' . $line . PHP_EOL;
+				$errors += 1;
 				continue;
 			}
 
-			$line_output = generateApacheRewrite($explodedLine[0], $explodedLine[1], (bool)$_POST['desc_comments']);
+			if( $_POST['desc_comments'] ) {
+				$output .= PHP_EOL . '# ' . $_POST['type'] . ' --- ' . $explodedLine[0] . ' => ' . $explodedLine[1] . PHP_EOL;
+			}
 
-			$output .= $line_output;
+			try {
+				$output .= generateApacheRewrite($explodedLine[0], $explodedLine[1]);
+			} catch(Exception $e) {
+				$output .= '# ERROR: ' . $e->getMessage() . ': ' . $line . PHP_EOL;
+				$errors += 1;
+			}
 		}
+	}
+
+	if( $errors > 0 ) {
+		$output = "# WARNING: Input contained {$errors} error(s)" . PHP_EOL . $output;
 	}
 } else {
 	$_POST['desc_comments']   = 1;
 	$_POST['tabbed_rewrites'] = <<<EOD
 http://www.test.com/test.html	http://www.test.com/spiders.html
 http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html
+http://www.test3.com/faq.html?faq=13&layout=bob	bbq.html
 text/faq.html?faq=20	helpdesk/kb.php
 EOD;
 }
@@ -123,6 +138,6 @@ EOD;
 	</select>
 	<label><input type="checkbox" name="desc_comments" value="1"<?php echo $_POST['desc_comments'] ? ' checked="checked"' : '' ?>>Comments</label>
 	<br />
-	<textarea id="rewrite-output" cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;"><?php echo htmlentities($output) ?></textarea><br />
+	<textarea id="rewrite-output" cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;<?= $errors > 0 ? 'background: LightPink;' : '' ?>"><?php echo htmlentities($output) ?></textarea><br />
 	<center><input type="submit" /></center>
 </form>
