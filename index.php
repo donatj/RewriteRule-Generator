@@ -29,7 +29,7 @@ function generateApacheRewrite( $from, $to ) {
 	if( !$parsedFrom['host'] && $parsedTo['host'] ) {
 		throw new Exception('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
 	} elseif( $parsedFrom['host'] != $parsedTo['host'] && $parsedTo['host'] ) {
-		$line_output .= 'RewriteCond %{HTTP_HOST} ^' . quotemeta($parsedFrom['host']) . '$';
+		$line_output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($parsedFrom['host']) . '$';
 		$line_output .= PHP_EOL;
 		$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
 	} else {
@@ -39,12 +39,12 @@ function generateApacheRewrite( $from, $to ) {
 	$explodedQuery = explode('&', $parsedFrom['query']);
 	foreach( $explodedQuery as $qs ) {
 		if( strlen($qs) > 0 ) {
-			$line_output .= 'RewriteCond %{QUERY_STRING} (^|&)' . quotemeta($qs) . '($|&)';
+			$line_output .= 'RewriteCond %{QUERY_STRING} (^|&)' . preg_quote($qs) . '($|&)';
 			$line_output .= PHP_EOL;
 		}
 	}
 
-	$line_output .= 'RewriteRule ^' . quotemeta(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
+	$line_output .= 'RewriteRule ^' . preg_quote(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
 	$line_output .= PHP_EOL;
 
 	return $line_output;
