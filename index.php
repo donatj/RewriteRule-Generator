@@ -44,7 +44,7 @@ function generateApacheRewrite( $from, $to ) {
 		}
 	}
 
-	$line_output .= 'RewriteRule ^' . preg_quote(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
+	$line_output .= 'RewriteRule ^' . preg_quote(ltrim($parsedFrom['path'], '/')) . '$ ' . $prefix . ltrim($parsedTo['path'], '/') . '\?' . $parsedTo['query'] . ($_POST['type'] == 'Rewrite' ? '&%{QUERY_STRING}' : ' [L,R=301]');
 	$line_output .= PHP_EOL;
 
 	return $line_output;
