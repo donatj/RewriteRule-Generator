@@ -9,5 +9,8 @@ donatj@gmail.com
 * A simple builder of RewriteCond / RewriteRule's handling GET strings in any order.
 * Free and open source
 
+## Todo:
+- Nginx Option
+
 ## What it is not
 * Perfect
