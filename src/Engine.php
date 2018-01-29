@@ -14,7 +14,7 @@ class Engine {
 	}
 
 
-	public function generate( string $input, int $type, bool $comments ) : string {
+	public function generate( string $input, int $type, bool $comments, int &$errors ) : string {
 		$errors = 0;
 		$output = '';
 
