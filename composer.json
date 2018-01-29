@@ -1,0 +1,17 @@
+{
+	"name": "donatj/rewrite-generator",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jesse Donat",
+			"email": "donatj@gmail.com"
+		}
+	],
+	"require": { },
+	"autoload": {
+		"psr-4": {
+			"donatj\\RewriteGenerator\\": "src/"
+		}
+	}
+}
