@@ -6,6 +6,8 @@ use donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException;
 
 class ApacheModRewriteGenerator implements GeneratorInterface {
 
+	use OctothorpCommentTrait;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -52,23 +54,6 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		}
 
 		return $output;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function lineComment( string $from, string $to, int $type ) : string {
-		return sprintf('# %s --- %s => %s', RewriteTypes::name($type), $from, $to);
-	}
-
-	/**
-	 * Generate a comment as a string
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	public function comment( string $text ) : string {
-		return "# {$text}";
 	}
 
 }
