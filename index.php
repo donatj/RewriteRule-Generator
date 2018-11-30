@@ -4,7 +4,7 @@
  * RewriteRule Generator
  *
  * @license MIT
- * @author Jesse G. Donat <donatj@gmail.com> https://donatstudios.com
+ * @author Jesse G. Donat <donatj@gmail.com> https://donatstudios.com/RewriteRule_Generator
  *
  */
 
