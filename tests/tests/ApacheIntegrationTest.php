@@ -86,6 +86,24 @@ RewriteRule ^index\.php/images/images/file/images/images/index\.php$ /test/? [L,
 RewriteRule ^index\.php/images/images/file/images/images/index\.php$ /test/?&%{QUERY_STRING}
 ',
 		];
+
+		yield [
+			'http://foo.html	http://bar.html',
+			<<<'TAG'
+# 301 --- http://foo.html => http://bar.html
+RewriteCond %{HTTP_HOST} ^foo\.html$
+RewriteRule ^$ http://bar.html/? [L,R=301]
+
+TAG
+			,
+			<<<'TAG'
+# Rewrite --- http://foo.html => http://bar.html
+RewriteCond %{HTTP_HOST} ^foo\.html$
+RewriteRule ^$ http://bar.html/?&%{QUERY_STRING}
+
+TAG
+			,
+		];
 	}
 
 }
