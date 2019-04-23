@@ -1,11 +1,5 @@
 <?php
 
-require 'vendor/autoload.php';
-
-use donatj\RewriteGenerator\ApacheModRewriteGenerator;
-use donatj\RewriteGenerator\Engine;
-use donatj\RewriteGenerator\RewriteTypes;
-
 /**
  * RewriteRule Generator
  *
@@ -13,6 +7,21 @@ use donatj\RewriteGenerator\RewriteTypes;
  * @author Jesse G. Donat <donatj@gmail.com> https://donatstudios.com/RewriteRule_Generator
  *
  */
+
+use donatj\RewriteGenerator\ApacheModRewriteGenerator;
+use donatj\RewriteGenerator\Engine;
+use donatj\RewriteGenerator\RewriteTypes;
+
+// Avoiding the composer autoloader momentarily for backwards compatibility
+spl_autoload_register(function ( string $className ) {
+	$parts = explode('\\', $className);
+	array_shift($parts);
+	array_shift($parts);
+	$path = implode($parts, DIRECTORY_SEPARATOR);
+
+	require "src/{$path}.php";
+});
+
 if( !$_POST ) {
 	$_POST['desc_comments']   = 1;
 	$_POST['tabbed_rewrites'] = <<<EOD
