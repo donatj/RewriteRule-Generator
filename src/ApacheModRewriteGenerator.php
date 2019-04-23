@@ -29,7 +29,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		if( !$parsedFrom['host'] && $parsedTo['host'] ) {
 			throw new AmbiguousRelativeHostException('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
 		}
-		if( $parsedFrom['host'] != $parsedTo['host'] && $parsedTo['host'] ) {
+		if( $parsedTo['host'] && $parsedFrom['host'] !== $parsedTo['host'] ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($parsedFrom['host']) . '$';
 			$output .= "\n";
 			$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
