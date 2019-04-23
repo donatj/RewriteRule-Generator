@@ -104,6 +104,32 @@ RewriteRule ^$ http://bar.html/?&%{QUERY_STRING}
 TAG
 			,
 		];
+
+		yield [
+			<<<'TAG'
+foo%20bar.html	baz%20qux.html
+fo-o%2Fa%5Cbf~%3F-o%25o%2Aba%20r.ht%24ml boo%09berry.html
+TAG
+			,
+			<<<'TAG'
+# 301 --- foo%20bar.html => baz%20qux.html
+RewriteRule ^foo\ bar\.html$ /baz\ qux.html? [L,R=301]
+
+# 301 --- fo-o%2Fa%5Cbf~%3F-o%25o%2Aba%20r.ht%24ml => boo%09berry.html
+RewriteRule ^fo\-o/a\\bf~\?\-o%o\*ba\ r\.ht\$ml$ /boo\	berry.html? [L,R=301]
+
+TAG
+			,
+			<<<'TAG'
+# Rewrite --- foo%20bar.html => baz%20qux.html
+RewriteRule ^foo\ bar\.html$ /baz\ qux.html?&%{QUERY_STRING}
+
+# Rewrite --- fo-o%2Fa%5Cbf~%3F-o%25o%2Aba%20r.ht%24ml => boo%09berry.html
+RewriteRule ^fo\-o/a\\bf~\?\-o%o\*ba\ r\.ht\$ml$ /boo\	berry.html?&%{QUERY_STRING}
+
+TAG
+			,
+		];
 	}
 
 	/**
