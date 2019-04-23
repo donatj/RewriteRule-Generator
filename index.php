@@ -12,6 +12,10 @@ use donatj\RewriteGenerator\ApacheModRewriteGenerator;
 use donatj\RewriteGenerator\Engine;
 use donatj\RewriteGenerator\RewriteTypes;
 
+if( file_exists(__DIR__ . '/vendor/autoload.php') ) {
+	require __DIR__ . '/vendor/autoload.php';
+}
+
 // Avoiding the composer autoloader momentarily for backwards compatibility
 spl_autoload_register(function ( string $className ) {
 	$parts = explode('\\', $className);
