@@ -15,14 +15,12 @@ class ApacheIntegrationTest extends TestCase {
 	public function test_examples( string $input, string $output301, string $outputRewrite ) {
 		$engine = new Engine(new ApacheModRewriteGenerator);
 
-		$errors = -1;
-		$given  = $engine->generate($input, RewriteTypes::PERMANENT_REDIRECT, true, $errors);
-		$this->assertSame(0, $errors);
+		$given = $engine->generate($input, RewriteTypes::PERMANENT_REDIRECT, true);
+		$this->assertSame(0, $engine->getLastErrorCount());
 		$this->assertSame($output301, $given);
 
-		$errors = -1;
-		$given  = $engine->generate($input, RewriteTypes::SERVER_REWRITE, true, $errors);
-		$this->assertSame(0, $errors);
+		$given = $engine->generate($input, RewriteTypes::SERVER_REWRITE, true);
+		$this->assertSame(0, $engine->getLastErrorCount());
 		$this->assertSame($outputRewrite, $given);
 	}
 
@@ -74,7 +72,7 @@ RewriteCond %{QUERY_STRING} (^|&)faq\=20($|&)
 RewriteRule ^text/faq\.html$ /helpdesk/kb.php?&%{QUERY_STRING}
 
 TAG
-	,
+			,
 
 
 		];

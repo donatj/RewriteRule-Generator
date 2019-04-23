@@ -9,11 +9,13 @@ class Engine {
 	 */
 	private $generator;
 
+	private $lastErrorCount = 0;
+
 	public function __construct( GeneratorInterface $generator ) {
 		$this->generator = $generator;
 	}
 
-	public function generate( string $input, int $type, bool $comments, int &$errors ) : string {
+	public function generate( string $input, int $type, bool $comments ) : string {
 		$errors = 0;
 		$output = '';
 
@@ -57,7 +59,13 @@ class Engine {
 			$output = $this->generator->comment("WARNING: Input contained {$errors} error(s)") . "\n\n{$output}";
 		}
 
+		$this->lastErrorCount = $errors;
+
 		return rtrim($output) . "\n";
+	}
+
+	public function getLastErrorCount() : int {
+		return $this->lastErrorCount;
 	}
 
 }

@@ -26,12 +26,10 @@ EOD;
 	$_POST['rewrite-type'] = 'apache';
 }
 
-$errors = 0;
-
 $generator = new ApacheModRewriteGenerator;
 
 $engine = new Engine($generator);
-$output = $engine->generate($_POST['tabbed_rewrites'], $_POST['type'], isset($_POST['desc_comments']), $errors);
+$output = $engine->generate($_POST['tabbed_rewrites'], $_POST['type'], isset($_POST['desc_comments']));
 
 ?>
 <!DOCTYPE html>
@@ -49,7 +47,7 @@ $output = $engine->generate($_POST['tabbed_rewrites'], $_POST['type'], isset($_P
 
 	<br />
 
-	<textarea id="rewrite-output" cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;<?= $errors > 0 ? 'background: LightPink;' : '' ?>" title="Rewrite Output"><?php echo htmlentities($output) ?></textarea><br />
+	<textarea id="rewrite-output" cols="100" rows="20" readonly="readonly" style="width: 100%; height: 265px;<?= $engine->getLastErrorCount() > 0 ? 'background: LightPink;' : '' ?>" title="Rewrite Output"><?php echo htmlentities($output) ?></textarea><br />
 
 	<center>
 		<input type="submit" />
