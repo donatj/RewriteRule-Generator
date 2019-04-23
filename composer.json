@@ -1,0 +1,24 @@
+{
+	"name": "donatj/rewrite-generator",
+	"description": "htaccess mod_rewrite RewriteRule Generator",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jesse Donat",
+			"email": "donatj@gmail.com"
+		}
+	],
+	"require": {
+		"php" : ">=7.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"donatj\\RewriteGenerator\\": "src/"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.5",
+		"donatj/drop": "^1.0"
+	}
+}
