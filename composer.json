@@ -1,6 +1,6 @@
 {
 	"name": "donatj/rewrite-generator",
-	"description": "htaccess mode_rewrite RewriteRule Generator",
+	"description": "htaccess mod_rewrite RewriteRule Generator",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
