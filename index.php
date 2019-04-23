@@ -38,7 +38,7 @@ $paramType     = $_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT;
 $generator = new ApacheModRewriteGenerator;
 
 $engine = new Engine($generator);
-$output = $engine->generate($_POST['tabbed_rewrites'], $paramType, isset($paramComments));
+$output = $engine->generate($paramRewrites, $paramType, isset($paramComments));
 
 ?>
 <!DOCTYPE html>
