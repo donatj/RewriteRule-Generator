@@ -1,7 +1,11 @@
 {
 	"name": "donatj/rewrite-generator",
-	"description": "htaccess mod_rewrite RewriteRule Generator",
-	"type": "library",
+	"description": "Server Rewrite Generator",
+	"keywords": [
+		"apache",
+		"rewrites"
+	],
+	"type": "project",
 	"license": "MIT",
 	"authors": [
 		{
@@ -10,7 +14,7 @@
 		}
 	],
 	"require": {
-		"php" : ">=7.1"
+		"php": ">=7.1"
 	},
 	"autoload": {
 		"psr-4": {
