@@ -19,7 +19,7 @@ class Engine {
 		$errors = 0;
 		$output = '';
 
-		$input = preg_replace('/(\t| )+/', '	', $input); // Spacing Cleanup
+		$input = preg_replace('/\h+/', "\t", $input); // Spacing Cleanup
 
 		$lines = explode(PHP_EOL, $input);
 
