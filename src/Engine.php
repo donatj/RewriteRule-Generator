@@ -13,7 +13,6 @@ class Engine {
 		$this->generator = $generator;
 	}
 
-
 	public function generate( string $input, int $type, bool $comments, int &$errors ) : string {
 		$errors = 0;
 		$output = '';
@@ -22,18 +21,19 @@ class Engine {
 
 		$lines = explode(PHP_EOL, $input);
 
-		if( trim($input) != '' ) {
+		if( trim($input) !== '' ) {
 			foreach( $lines as $line ) {
 				$line = trim($line);
-				if( $line == '' ) {
+				if( $line === '' ) {
 					continue;
 				}
 				$explodedLine = explode("\t", $line);
 
-				if( count($explodedLine) != 2 ) {
+				if( count($explodedLine) !== 2 ) {
 					$output .= $this->generator->comment('ERROR: Malformed Line Skipped: ' . $line);
 					$output .= "\n";
-					$errors += 1;
+					$errors++;
+
 					continue;
 				}
 
@@ -48,7 +48,7 @@ class Engine {
 				} catch( \Exception $e ) {
 					$output .= $this->generator->comment('ERROR: ' . $e->getMessage() . ': ' . $line);
 					$output .= "\n";
-					$errors += 1;
+					$errors++;
 				}
 			}
 		}
@@ -57,7 +57,7 @@ class Engine {
 			$output = $this->generator->comment("WARNING: Input contained {$errors} error(s)") . "\n\n{$output}";
 		}
 
-		return $output;
+		return rtrim($output) . "\n";
 	}
 
 }
