@@ -17,8 +17,12 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		$parsedFrom['host']  = $parsedFrom['host'] ?? '';
 		$parsedTo['host']    = $parsedTo['host'] ?? '';
+
 		$parsedFrom['query'] = $parsedFrom['query'] ?? '';
 		$parsedTo['query']   = $parsedTo['query'] ?? '';
+
+		$parsedFrom['path'] = $parsedFrom['path'] ?? '';
+		$parsedTo['path']   = $parsedTo['path'] ?? '';
 
 		$output = '';
 
