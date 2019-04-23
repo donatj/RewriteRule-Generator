@@ -24,8 +24,8 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$fromQuery = $parsedFrom['query'] ?? '';
 		$toQuery   = $parsedTo['query'] ?? '';
 
-		$fromPath = $parsedFrom['path'] ?? '';
-		$toPath   = $parsedTo['path'] ?? '';
+		$fromPath = urldecode($parsedFrom['path'] ?? '');
+		$toPath   = urldecode($parsedTo['path'] ?? '');
 
 		$output = '';
 
@@ -33,7 +33,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 			throw new AmbiguousRelativeHostException('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
 		}
 		if( $toHost && $fromHost !== $toHost ) {
-			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost) . '$';
+			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost, ' ') . '$';
 			$output .= "\n";
 			$prefix = "{$toScheme}://{$toHost}/";
 		} else {
@@ -43,12 +43,12 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$explodedQuery = explode('&', $fromQuery);
 		foreach( $explodedQuery as $qs ) {
 			if( $qs !== '' ) {
-				$output .= 'RewriteCond %{QUERY_STRING} (^|&)' . preg_quote($qs) . '($|&)';
+				$output .= 'RewriteCond %{QUERY_STRING} (^|&)' . preg_quote($qs, ' ') . '($|&)';
 				$output .= "\n";
 			}
 		}
 
-		$output .= 'RewriteRule ^' . preg_quote(ltrim($fromPath, '/')) . '$ ' . $prefix . ltrim($toPath, '/') . '?' . $toQuery;
+		$output .= 'RewriteRule ^' . preg_quote(ltrim($fromPath, '/'), ' ') . '$ ' . $this->escapeSubstitution($prefix . ltrim($toPath, '/')) . '?' . $toQuery;
 
 		switch( $type ) {
 			case RewriteTypes::SERVER_REWRITE:
@@ -58,6 +58,10 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		}
 
 		throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type);
+	}
+
+	private function escapeSubstitution( string $input ) : string {
+		return preg_replace('/[-\s%$\\\\]/', '\\\\$0', $input);
 	}
 
 }
