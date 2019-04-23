@@ -26,36 +26,32 @@ spl_autoload_register(function ( string $className ) {
 	require "src/{$path}.php";
 });
 
-if( !$_POST ) {
-	$_POST['desc_comments']   = 1;
-	$_POST['tabbed_rewrites'] = <<<EOD
+$paramRewrites = $_POST['tabbed_rewrites'] ?? <<<EOD
 http://www.test.com/test.html	http://www.test.com/spiders.html
 http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html
 http://www.test3.com/faq.html?faq=13&layout=bob	bbq.html
 text/faq.html?faq=20	helpdesk/kb.php
 EOD;
-
-	$_POST['type']         = RewriteTypes::PERMANENT_REDIRECT;
-	$_POST['rewrite-type'] = 'apache';
-}
+$paramComments = (bool)($_POST['desc_comments'] ?? true);
+$paramType     = $_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT;
 
 $generator = new ApacheModRewriteGenerator;
 
 $engine = new Engine($generator);
-$output = $engine->generate($_POST['tabbed_rewrites'], $_POST['type'], isset($_POST['desc_comments']));
+$output = $engine->generate($_POST['tabbed_rewrites'], $paramType, isset($paramComments));
 
 ?>
 <!DOCTYPE html>
 <form method="post">
-	<textarea id="tsv-input" cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;" title="TSV Input"><?php echo htmlentities($_POST['tabbed_rewrites']) ?></textarea><br />
+	<textarea id="tsv-input" cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;" title="TSV Input"><?php echo htmlentities($paramRewrites) ?></textarea><br />
 	<select name="type" title="Rewrite Type">
 		<option value="<?= RewriteTypes::PERMANENT_REDIRECT ?>">301</option>
-		<option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $_POST['type'] == RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>
+		<option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $paramType === RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>
 			Rewrite
 		</option>
 	</select>
 	<label>
-		<input type="checkbox" name="desc_comments" value="1"<?php echo isset($_POST['desc_comments']) ? ' checked' : '' ?>>Comments
+		<input type="checkbox" name="desc_comments" value="1"<?php echo $paramComments ? ' checked' : '' ?>>Comments
 	</label>
 
 	<br />
