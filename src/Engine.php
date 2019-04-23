@@ -33,7 +33,7 @@ class Engine {
 
 				if( count($explodedLine) !== 2 ) {
 					$output .= $this->generator->comment('ERROR: Malformed Line Skipped: ' . $line);
-					$output .= "\n";
+					$output .= "\n\n";
 					$errors++;
 
 					continue;
