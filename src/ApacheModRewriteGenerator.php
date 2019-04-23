@@ -6,7 +6,7 @@ use donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException;
 
 class ApacheModRewriteGenerator implements GeneratorInterface {
 
-	use OctothorpCommentTrait;
+	use OctothorpeCommentTrait;
 
 	/**
 	 * @inheritdoc

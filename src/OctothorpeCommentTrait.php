@@ -2,7 +2,7 @@
 
 namespace donatj\RewriteGenerator;
 
-trait OctothorpCommentTrait {
+trait OctothorpeCommentTrait {
 
 	/**
 	 * @inheritdoc
