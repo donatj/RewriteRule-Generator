@@ -3,6 +3,7 @@
 namespace donatj\RewriteGenerator;
 
 use donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException;
+use InvalidArgumentException;
 
 class ApacheModRewriteGenerator implements GeneratorInterface {
 
@@ -34,7 +35,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		if( $toHost && $fromHost !== $toHost ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost) . '$';
 			$output .= "\n";
-			$prefix = $toScheme . '://' . $toHost . '/';
+			$prefix = "{$toScheme}://{$toHost}/";
 		} else {
 			$prefix = '/';
 		}
@@ -51,16 +52,12 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		switch( $type ) {
 			case RewriteTypes::SERVER_REWRITE:
-				$output .= '&%{QUERY_STRING}';
-				break;
+				return "{$output}&%{QUERY_STRING}";
 			case RewriteTypes::PERMANENT_REDIRECT:
-				$output .= ' [L,R=301]';
-				break;
-			default:
-				throw new \InvalidArgumentException('Unhandled RewriteType: ' . $type, $type);
+				return "{$output} [L,R=301]";
 		}
 
-		return $output;
+		throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type);
 	}
 
 }
