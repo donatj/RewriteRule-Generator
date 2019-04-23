@@ -20,11 +20,12 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$parsedFrom['query'] = $parsedFrom['query'] ?? '';
 		$parsedTo['query']   = $parsedTo['query'] ?? '';
 
-		$output = "";
+		$output = '';
 
 		if( !$parsedFrom['host'] && $parsedTo['host'] ) {
 			throw new AmbiguousRelativeHostException('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
-		} elseif( $parsedFrom['host'] != $parsedTo['host'] && $parsedTo['host'] ) {
+		}
+		if( $parsedFrom['host'] != $parsedTo['host'] && $parsedTo['host'] ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($parsedFrom['host']) . '$';
 			$output .= "\n";
 			$prefix = $parsedTo['scheme'] . '://' . $parsedTo['host'] . '/';
@@ -34,7 +35,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		$explodedQuery = explode('&', $parsedFrom['query']);
 		foreach( $explodedQuery as $qs ) {
-			if( strlen($qs) > 0 ) {
+			if( $qs !== '' ) {
 				$output .= 'RewriteCond %{QUERY_STRING} (^|&)' . preg_quote($qs) . '($|&)';
 				$output .= "\n";
 			}

@@ -1,5 +1,6 @@
 {
 	"name": "donatj/rewrite-generator",
+	"description": "htaccess mode_rewrite RewriteRule Generator",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
@@ -8,7 +9,9 @@
 			"email": "donatj@gmail.com"
 		}
 	],
-	"require": { },
+	"require": {
+		"php" : ">=7.1"
+	},
 	"autoload": {
 		"psr-4": {
 			"donatj\\RewriteGenerator\\": "src/"
