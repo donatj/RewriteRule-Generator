@@ -5,7 +5,7 @@
 		"apache",
 		"rewrites"
 	],
-	"type": "project",
+	"type": "library",
 	"license": "MIT",
 	"authors": [
 		{
