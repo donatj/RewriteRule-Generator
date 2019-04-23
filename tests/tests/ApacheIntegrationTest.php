@@ -5,6 +5,7 @@ namespace tests;
 use donatj\RewriteGenerator\ApacheModRewriteGenerator;
 use donatj\RewriteGenerator\Engine;
 use donatj\RewriteGenerator\RewriteTypes;
+use Generator;
 use PHPUnit\Framework\TestCase;
 
 class ApacheIntegrationTest extends TestCase {
@@ -24,7 +25,7 @@ class ApacheIntegrationTest extends TestCase {
 		$this->assertSame($outputRewrite, $given);
 	}
 
-	public function exampleProvider() {
+	public function exampleProvider() : Generator {
 		yield [
 			<<<'TAG'
 http://www.test.com/test.html	http://www.test.com/spiders.html
@@ -74,7 +75,6 @@ RewriteRule ^text/faq\.html$ /helpdesk/kb.php?&%{QUERY_STRING}
 TAG
 			,
 
-
 		];
 
 		yield [
@@ -103,6 +103,78 @@ RewriteRule ^$ http://bar.html/?&%{QUERY_STRING}
 
 TAG
 			,
+		];
+	}
+
+	/**
+	 * @dataProvider failureProvider
+	 */
+	public function test_failures( string $input, string $output, int $errorCount ) {
+		$engine = new Engine(new ApacheModRewriteGenerator);
+
+		$given = $engine->generate($input, RewriteTypes::PERMANENT_REDIRECT, true);
+		$this->assertSame($errorCount, $engine->getLastErrorCount());
+		$this->assertSame($output, $given);
+	}
+
+	public function failureProvider() : Generator {
+		yield [
+			'a	b	c',
+			<<<'TAG'
+# WARNING: Input contained 1 error(s)
+
+# ERROR: Malformed Line Skipped: a	b	c
+
+TAG
+			, 1,
+		];
+
+		yield [
+			'a.html	http://bar.html',
+			<<<'TAG'
+# WARNING: Input contained 1 error(s)
+
+# 301 --- a.html => http://bar.html
+# ERROR: Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.: a.html	http://bar.html
+
+TAG
+			, 1,
+		];
+
+		yield [
+			<<<'TAG'
+foo.html	bar.html
+
+baz.html	boo	bar.html
+
+this	line	is	just	silly!
+
+is	ok
+BAD
+
+is fine
+TAG
+			,
+			<<<'TAG'
+# WARNING: Input contained 3 error(s)
+
+# 301 --- foo.html => bar.html
+RewriteRule ^foo\.html$ /bar.html? [L,R=301]
+
+# ERROR: Malformed Line Skipped: baz.html	boo	bar.html
+
+# ERROR: Malformed Line Skipped: this	line	is	just	silly!
+
+# 301 --- is => ok
+RewriteRule ^is$ /ok? [L,R=301]
+
+# ERROR: Malformed Line Skipped: BAD
+
+# 301 --- is => fine
+RewriteRule ^is$ /fine? [L,R=301]
+
+TAG
+			, 3,
 		];
 	}
 
