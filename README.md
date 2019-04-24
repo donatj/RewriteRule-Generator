@@ -1,6 +1,8 @@
 # Mod Rewrite Rule Generator
 
-[![Build Status](https://travis-ci.org/donatj/Mod-Rewrite-Rule-Generator.svg?branch=master)](https://travis-ci.org/donatj/Mod-Rewrite-Rule-Generator)
+[![Build Status](https://travis-ci.org/donatj/RewriteRule-Generator.svg?branch=master)](https://travis-ci.org/donatj/RewriteRule-Generator)
+[![Latest Stable Version](https://poser.pugx.org/donatj/rewrite-generator/v/stable)](https://packagist.org/packages/donatj/rewrite-generator)
+[![License](https://poser.pugx.org/donatj/rewrite-generator/license)](https://packagist.org/packages/donatj/rewrite-generator)
 
 Web Frontend: https://donatstudios.com/RewriteRule_Generator
 
