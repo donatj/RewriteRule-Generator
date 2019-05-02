@@ -32,13 +32,13 @@ http://www.test.com/faq.html?faq=13&layout=bob	http://www.test2.com/faqs.html
 http://www.test3.com/faq.html?faq=13&layout=bob	bbq.html
 text/faq.html?faq=20	helpdesk/kb.php
 EOD;
-$paramComments = (bool)($_POST['desc_comments'] ?? true);
+$paramComments = (bool)($_POST ? ($_POST['desc_comments'] ?? false) : true);
 $paramType     = $_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT;
 
 $generator = new ApacheModRewriteGenerator;
 
 $engine = new Engine($generator);
-$output = $engine->generate($paramRewrites, $paramType, isset($paramComments));
+$output = $engine->generate($paramRewrites, $paramType, $paramComments);
 
 ?>
 <!DOCTYPE html>
