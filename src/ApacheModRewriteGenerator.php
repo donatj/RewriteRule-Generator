@@ -50,7 +50,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 			);
 		}
 
-		if( ($fromScheme && $toScheme) && $fromScheme !== $toScheme && $toHost && $fromHost === $toHost ) {
+		if( $fromScheme && $toScheme && $toHost && $fromScheme !== $toScheme && $fromHost === $toHost ) {
 			throw new MismatchedSchemeException('Scheme specified on "FROM" of "' . $fromScheme . '" and "TO" of "' . $toScheme . '" do not match.');
 		}
 
