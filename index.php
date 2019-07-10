@@ -33,7 +33,7 @@ http://www.test3.com/faq.html?faq=13&layout=bob	bbq.html
 text/faq.html?faq=20	helpdesk/kb.php
 EOD;
 $paramComments = (bool)($_POST ? ($_POST['desc_comments'] ?? false) : true);
-$paramType     = $_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT;
+$paramType     = (int)($_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT);
 
 $generator = new ApacheModRewriteGenerator;
 
