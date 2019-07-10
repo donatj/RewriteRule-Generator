@@ -131,6 +131,27 @@ TAG
 			,
 		];
 
+		// Assure Redirects across Schemes do not error.
+		yield [
+			<<<'TAG'
+http://foo.bar/baz	https://baz.qux/quux
+TAG
+			,
+			<<<'TAG'
+# 301 --- http://foo.bar/baz => https://baz.qux/quux
+RewriteCond %{HTTP_HOST} ^foo\.bar$
+RewriteRule ^baz$ https://baz.qux/quux? [L,R=301]
+
+TAG
+			,
+			<<<'TAG'
+# Rewrite --- http://foo.bar/baz => https://baz.qux/quux
+RewriteCond %{HTTP_HOST} ^foo\.bar$
+RewriteRule ^baz$ https://baz.qux/quux?&%{QUERY_STRING}
+
+TAG
+			,
+		];
 	}
 
 	/**
@@ -202,6 +223,22 @@ RewriteRule ^is$ /fine? [L,R=301]
 
 TAG
 			, 3,
+		];
+
+		// Ensure an error is thrown if the HOST is the same but the SCHEME varies
+		yield [
+			<<<'TAG'
+http://foo.bar/baz	https://foo.bar/baz
+TAG
+			,
+			<<<'TAG'
+# WARNING: Input contained 1 error(s)
+
+# 301 --- http://foo.bar/baz => https://foo.bar/baz
+# ERROR: Scheme specified on "FROM" of "http" and "TO" of "https" do not match.: http://foo.bar/baz	https://foo.bar/baz
+
+TAG
+			, 1,
 		];
 
 		yield [
