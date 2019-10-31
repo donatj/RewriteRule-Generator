@@ -3,6 +3,7 @@
 namespace donatj\RewriteGenerator;
 
 use donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException;
+use donatj\RewriteGenerator\Exceptions\UnhandledUrlException;
 use InvalidArgumentException;
 
 class ApacheModRewriteGenerator implements GeneratorInterface {
@@ -15,6 +16,18 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 	public function generateRewrite( string $from, string $to, int $type ) : string {
 		$parsedFrom = parse_url($from);
 		$parsedTo   = parse_url($to);
+
+		if( !empty($parsedFrom['fragment']) ) {
+			throw new UnhandledUrlException(
+				'FROM URL fragments cannot be handled - fragments are not sent in the request to the server.'
+			);
+		}
+
+		if( !empty($parsedTo['fragment']) ) {
+			throw new UnhandledUrlException(
+				'Rewriting to URLs with fragments is not supported.'
+			);
+		}
 
 		$toScheme = $parsedTo['scheme'] ?? '';
 
@@ -30,7 +43,9 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$output = '';
 
 		if( !$fromHost && $toHost ) {
-			throw new AmbiguousRelativeHostException('Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.');
+			throw new AmbiguousRelativeHostException(
+				'Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.'
+			);
 		}
 		if( $toHost && $fromHost !== $toHost ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost, ' ') . '$';
