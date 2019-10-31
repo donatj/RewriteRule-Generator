@@ -2,6 +2,6 @@
 
 namespace donatj\RewriteGenerator\Exceptions;
 
-class AmbiguousRelativeHostException extends \Exception {
+class AmbiguousRelativeHostException extends GenerationException {
 
 }

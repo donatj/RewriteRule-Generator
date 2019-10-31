@@ -2,6 +2,8 @@
 
 namespace donatj\RewriteGenerator;
 
+use donatj\RewriteGenerator\Exceptions\GenerationException;
+
 class Engine {
 
 	/**
@@ -47,7 +49,7 @@ class Engine {
 
 					$output .= $this->generator->generateRewrite($explodedLine[0], $explodedLine[1], $type);
 					$output .= "\n\n";
-				} catch( \Exception $e ) {
+				} catch( GenerationException $e ) {
 					$output .= $this->generator->comment('ERROR: ' . $e->getMessage() . ': ' . $line);
 					$output .= "\n";
 					$errors++;

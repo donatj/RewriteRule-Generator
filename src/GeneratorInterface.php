@@ -11,7 +11,7 @@ interface GeneratorInterface {
 	 * @param string $to
 	 * @param int    $type From the RewriteTypes enum
 	 * @return string
-	 * @throws \donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException
+	 * @throws \donatj\RewriteGenerator\Exceptions\GenerationException
 	 */
 	public function generateRewrite( string $from, string $to, int $type ) : string;
 
