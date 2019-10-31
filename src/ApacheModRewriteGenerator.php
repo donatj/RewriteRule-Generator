@@ -19,13 +19,13 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		if( !empty($parsedFrom['fragment']) ) {
 			throw new UnhandledUrlException(
-				'FROM URL fragments cannot be handled - fragments are not sent in the request to the server.'
+				'"FROM" URI fragments cannot be handled - fragments are not sent in the request to the server.'
 			);
 		}
 
 		if( !empty($parsedTo['fragment']) ) {
 			throw new UnhandledUrlException(
-				'Rewriting to URLs with fragments is not supported.'
+				'"TO" URI fragments are not supported at this time.'
 			);
 		}
 

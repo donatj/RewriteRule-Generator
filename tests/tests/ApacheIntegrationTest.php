@@ -130,6 +130,7 @@ RewriteRule ^fo\-o/a\\bf~\?\-o%o\*ba\ r\.ht\$ml$ /boo\	berry.html?&%{QUERY_STRIN
 TAG
 			,
 		];
+
 	}
 
 	/**
@@ -201,6 +202,24 @@ RewriteRule ^is$ /fine? [L,R=301]
 
 TAG
 			, 3,
+		];
+
+		yield [
+			<<<'TAG'
+foo.html#funk	bar.html
+foo.html	bar.html#fresh
+TAG
+			,
+			<<<'TAG'
+# WARNING: Input contained 2 error(s)
+
+# 301 --- foo.html#funk => bar.html
+# ERROR: "FROM" URI fragments cannot be handled - fragments are not sent in the request to the server.: foo.html#funk	bar.html
+# 301 --- foo.html => bar.html#fresh
+# ERROR: "TO" URI fragments are not supported at this time.: foo.html	bar.html#fresh
+
+TAG
+			, 2,
 		];
 	}
 
