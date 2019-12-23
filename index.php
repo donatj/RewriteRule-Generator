@@ -45,10 +45,9 @@ $output = $engine->generate($paramRewrites, $paramType, $paramComments);
 <form method="post">
 	<textarea id="tsv-input" cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;" title="TSV Input"><?php echo htmlentities($paramRewrites) ?></textarea><br />
 	<select name="type" title="Rewrite Type">
-		<option value="<?= RewriteTypes::PERMANENT_REDIRECT ?>">301</option>
-		<option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $paramType === RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>
-			Rewrite
-		</option>
+            <option value="<?= RewriteTypes::TEMPORARY_REDIRECT ?>" <?php echo $paramType === RewriteTypes::TEMPORARY_REDIRECT ? ' selected' : '' ?>>302</option>
+            <option value="<?= RewriteTypes::PERMANENT_REDIRECT ?>" <?php echo $paramType === RewriteTypes::PERMANENT_REDIRECT ? ' selected' : '' ?>>301</option>
+            <option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $paramType === RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>Rewrite</option>
 	</select>
 	<label>
 		<input type="checkbox" name="desc_comments" value="1"<?php echo $paramComments ? ' checked' : '' ?>>Comments
