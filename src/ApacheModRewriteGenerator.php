@@ -3,6 +3,7 @@
 namespace donatj\RewriteGenerator;
 
 use donatj\RewriteGenerator\Exceptions\AmbiguousRelativeHostException;
+use donatj\RewriteGenerator\Exceptions\MismatchedSchemeException;
 use donatj\RewriteGenerator\Exceptions\UnhandledUrlException;
 use InvalidArgumentException;
 
@@ -29,7 +30,8 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 			);
 		}
 
-		$toScheme = $parsedTo['scheme'] ?? '';
+		$fromScheme = $parsedFrom['scheme'] ?? '';
+		$toScheme   = $parsedTo['scheme'] ?? '';
 
 		$fromHost = $parsedFrom['host'] ?? '';
 		$toHost   = $parsedTo['host'] ?? '';
@@ -47,6 +49,11 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 				'Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.'
 			);
 		}
+
+		if( $fromScheme && $toScheme && $toHost && $fromScheme !== $toScheme && $fromHost === $toHost ) {
+			throw new MismatchedSchemeException('Scheme specified on "FROM" of "' . $fromScheme . '" and "TO" of "' . $toScheme . '" do not match.');
+		}
+
 		if( $toHost && $fromHost !== $toHost ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost, ' ') . '$';
 			$output .= "\n";
