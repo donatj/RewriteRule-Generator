@@ -39,17 +39,17 @@ RewriteRule ^test\.html$ /spiders.html? [L,R=301]
 
 # 301 --- http://www.test.com/faq.html?faq=13&layout=bob => http://www.test2.com/faqs.html
 RewriteCond %{HTTP_HOST} ^www\.test\.com$
-RewriteCond %{QUERY_STRING} (^|&)faq\=13($|&)
-RewriteCond %{QUERY_STRING} (^|&)layout\=bob($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=13(?:$|&)
+RewriteCond %{QUERY_STRING} (?:^|&)layout\=bob(?:$|&)
 RewriteRule ^faq\.html$ http://www.test2.com/faqs.html? [L,R=301]
 
 # 301 --- http://www.test3.com/faq.html?faq=13&layout=bob => bbq.html
-RewriteCond %{QUERY_STRING} (^|&)faq\=13($|&)
-RewriteCond %{QUERY_STRING} (^|&)layout\=bob($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=13(?:$|&)
+RewriteCond %{QUERY_STRING} (?:^|&)layout\=bob(?:$|&)
 RewriteRule ^faq\.html$ /bbq.html? [L,R=301]
 
 # 301 --- text/faq.html?faq=20 => helpdesk/kb.php
-RewriteCond %{QUERY_STRING} (^|&)faq\=20($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=20(?:$|&)
 RewriteRule ^text/faq\.html$ /helpdesk/kb.php? [L,R=301]
 
 TAG
@@ -59,17 +59,17 @@ RewriteRule ^test\.html$ /spiders.html?&%{QUERY_STRING}
 
 # Rewrite --- http://www.test.com/faq.html?faq=13&layout=bob => http://www.test2.com/faqs.html
 RewriteCond %{HTTP_HOST} ^www\.test\.com$
-RewriteCond %{QUERY_STRING} (^|&)faq\=13($|&)
-RewriteCond %{QUERY_STRING} (^|&)layout\=bob($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=13(?:$|&)
+RewriteCond %{QUERY_STRING} (?:^|&)layout\=bob(?:$|&)
 RewriteRule ^faq\.html$ http://www.test2.com/faqs.html?&%{QUERY_STRING}
 
 # Rewrite --- http://www.test3.com/faq.html?faq=13&layout=bob => bbq.html
-RewriteCond %{QUERY_STRING} (^|&)faq\=13($|&)
-RewriteCond %{QUERY_STRING} (^|&)layout\=bob($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=13(?:$|&)
+RewriteCond %{QUERY_STRING} (?:^|&)layout\=bob(?:$|&)
 RewriteRule ^faq\.html$ /bbq.html?&%{QUERY_STRING}
 
 # Rewrite --- text/faq.html?faq=20 => helpdesk/kb.php
-RewriteCond %{QUERY_STRING} (^|&)faq\=20($|&)
+RewriteCond %{QUERY_STRING} (?:^|&)faq\=20(?:$|&)
 RewriteRule ^text/faq\.html$ /helpdesk/kb.php?&%{QUERY_STRING}
 
 TAG

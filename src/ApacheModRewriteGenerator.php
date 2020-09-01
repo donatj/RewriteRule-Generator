@@ -58,7 +58,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$explodedQuery = explode('&', $fromQuery);
 		foreach( $explodedQuery as $qs ) {
 			if( $qs !== '' ) {
-				$output .= 'RewriteCond %{QUERY_STRING} (^|&)' . preg_quote($qs, ' ') . '($|&)';
+				$output .= 'RewriteCond %{QUERY_STRING} (?:^|&)' . preg_quote($qs, ' ') . '(?:$|&)';
 				$output .= "\n";
 			}
 		}
