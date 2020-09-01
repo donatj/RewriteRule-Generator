@@ -22,7 +22,7 @@
 		}
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^7.5",
+		"phpunit/phpunit": "~7.5|~9.3",
 		"donatj/drop": "^1.0"
 	}
 }
