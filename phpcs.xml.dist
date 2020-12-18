@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset>
+	<rule ref="Corpus"/>
+	<file>src</file>
+	<file>tests</file>
+	<file>index.php</file>
+</ruleset>
