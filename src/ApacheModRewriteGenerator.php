@@ -47,6 +47,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 				'Unclear relative host. When the "FROM" URI specifies a HOST the "TO" MUST specify a HOST as well.'
 			);
 		}
+
 		if( $toHost && $fromHost !== $toHost ) {
 			$output .= 'RewriteCond %{HTTP_HOST} ^' . preg_quote($fromHost, ' ') . '$';
 			$output .= "\n";

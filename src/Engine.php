@@ -31,6 +31,7 @@ class Engine {
 				if( $line === '' ) {
 					continue;
 				}
+
 				$explodedLine = explode("\t", $line);
 
 				if( count($explodedLine) !== 2 ) {
