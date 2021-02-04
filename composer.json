@@ -25,6 +25,6 @@
 		"phpunit/phpunit": "~7.5|~9.3",
 		"donatj/drop": "^1.0",
 		"squizlabs/php_codesniffer": "^3.5",
-		"corpus/coding-standard": "^0.0.4"
+		"corpus/coding-standard": "^0.3.0"
 	}
 }
