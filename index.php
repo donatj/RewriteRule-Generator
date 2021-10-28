@@ -21,7 +21,7 @@ spl_autoload_register(function ( string $className ) {
 	$parts = explode('\\', $className);
 	array_shift($parts);
 	array_shift($parts);
-	$path = implode($parts, DIRECTORY_SEPARATOR);
+	$path = implode(DIRECTORY_SEPARATOR, $parts);
 
 	require "src/{$path}.php";
 });
