@@ -35,7 +35,7 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 		$toHost   = $parsedTo['host'] ?? '';
 
 		$fromQuery = $parsedFrom['query'] ?? '';
-		$toQuery   = $parsedTo['query'] ?? '';
+		$toQuery   = (isset($parsedTo['query']) && $parsedTo['query']!='') ? '?'.$parsedTo['query'] : '';
 
 		$fromPath = urldecode($parsedFrom['path'] ?? '');
 		$toPath   = urldecode($parsedTo['path'] ?? '');
@@ -64,20 +64,22 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 			}
 		}
 
-		$output .= 'RewriteRule ^' . preg_quote(ltrim($fromPath, '/'), ' ') . '$ ' . $this->escapeSubstitution($prefix . ltrim($toPath, '/')) . '?' . $toQuery;
+		$output .= 'RewriteRule ^' . preg_quote(ltrim($fromPath, '/'), ' ') . '$ ' . $this->escapeSubstitution($prefix . ltrim($toPath, '/')) . $toQuery;
 
 		switch( $type ) {
 			case RewriteTypes::SERVER_REWRITE:
 				return "{$output}&%{QUERY_STRING}";
 			case RewriteTypes::PERMANENT_REDIRECT:
-				return "{$output} [L,R=301]";
+                        case RewriteTypes::TEMPORARY_REDIRECT:
+				return "{$output} [L,R=".RewriteTypes::name($type)."]";
 		}
 
 		throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type);
 	}
 
 	private function escapeSubstitution( string $input ) : string {
-		return preg_replace('/[-\s%$\\\\]/', '\\\\$0', $input);
+		//return preg_replace('/[-\s%$\\\\]/', '\\\\$0', $input);
+            return $input;
 	}
 
 }

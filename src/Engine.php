@@ -49,7 +49,7 @@ class Engine {
 					}
 
 					$output .= $this->generator->generateRewrite($explodedLine[0], $explodedLine[1], $type);
-					$output .= "\n\n";
+					$output .= "\n";
 				} catch( GenerationException $e ) {
 					$output .= $this->generator->comment('ERROR: ' . $e->getMessage() . ': ' . $line);
 					$output .= "\n";
