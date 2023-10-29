@@ -6,12 +6,9 @@ use donatj\RewriteGenerator\Exceptions\GenerationException;
 
 class Engine {
 
-	/**
-	 * @var \donatj\RewriteGenerator\GeneratorInterface
-	 */
-	private $generator;
+	private GeneratorInterface $generator;
 
-	private $lastErrorCount = 0;
+	private int $lastErrorCount = 0;
 
 	public function __construct( GeneratorInterface $generator ) {
 		$this->generator = $generator;
@@ -22,6 +19,9 @@ class Engine {
 		$output = '';
 
 		$input = preg_replace('/\h+/', "\t", $input); // Spacing Cleanup
+		if( $input === null ) {
+			throw new \RuntimeException('preg_replace failed - ' . preg_last_error());
+		}
 
 		$lines = explode(PHP_EOL, $input);
 

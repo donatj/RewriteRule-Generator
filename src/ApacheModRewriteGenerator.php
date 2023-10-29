@@ -77,7 +77,12 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 	}
 
 	private function escapeSubstitution( string $input ) : string {
-		return preg_replace('/[-\s%$\\\\]/', '\\\\$0', $input);
+		$result = preg_replace('/[-\s%$\\\\]/', '\\\\$0', $input);
+		if( $result === null ) {
+			throw new \RuntimeException('preg_replace failed - ' . preg_last_error());
+		}
+
+		return $result;
 	}
 
 }
