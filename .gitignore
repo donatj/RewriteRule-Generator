@@ -3,3 +3,4 @@
 /vendor/
 /clover.xml
 /composer.lock
+*.cache
