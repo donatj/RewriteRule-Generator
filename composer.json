@@ -22,7 +22,7 @@
 		}
 	},
 	"require-dev": {
-		"corpus/coding-standard": "^0.6.0",
+		"corpus/coding-standard": "^0.7.0",
 		"donatj/drop": "^1.0",
 		"phpstan/phpstan": "^1.10",
 		"phpunit/phpunit": "~7.5|~9.3",
