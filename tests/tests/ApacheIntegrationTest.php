@@ -13,7 +13,7 @@ class ApacheIntegrationTest extends TestCase {
 	/**
 	 * @dataProvider exampleProvider
 	 */
-	public function test_examples( string $input, string $output301, string $outputRewrite ) {
+	public function test_examples( string $input, string $output301, string $outputRewrite ) : void {
 		$engine = new Engine(new ApacheModRewriteGenerator);
 
 		$given = $engine->generate($input, RewriteTypes::PERMANENT_REDIRECT, true);
@@ -136,7 +136,7 @@ TAG
 	/**
 	 * @dataProvider failureProvider
 	 */
-	public function test_failures( string $input, string $output, int $errorCount ) {
+	public function test_failures( string $input, string $output, int $errorCount ) : void {
 		$engine = new Engine(new ApacheModRewriteGenerator);
 
 		$given = $engine->generate($input, RewriteTypes::PERMANENT_REDIRECT, true);
