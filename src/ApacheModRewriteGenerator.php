@@ -66,14 +66,11 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		$output .= 'RewriteRule ^' . preg_quote(ltrim($fromPath, '/'), ' ') . '$ ' . $this->escapeSubstitution($prefix . ltrim($toPath, '/')) . '?' . $toQuery;
 
-		switch( $type ) {
-			case RewriteTypes::SERVER_REWRITE:
-				return "{$output}&%{QUERY_STRING}";
-			case RewriteTypes::PERMANENT_REDIRECT:
-				return "{$output} [L,R=301]";
-		}
-
-		throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type);
+		return match ($type) {
+			RewriteTypes::SERVER_REWRITE     => "{$output}&%{QUERY_STRING}",
+			RewriteTypes::PERMANENT_REDIRECT => "{$output} [L,R=301]",
+			default                          => throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type),
+		};
 	}
 
 	private function escapeSubstitution( string $input ) : string {

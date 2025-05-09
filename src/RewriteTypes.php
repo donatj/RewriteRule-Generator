@@ -8,14 +8,11 @@ abstract class RewriteTypes {
 	public const PERMANENT_REDIRECT = 2;
 
 	public static function name( int $type ) : string {
-		switch( $type ) {
-			case self::SERVER_REWRITE:
-				return 'Rewrite';
-			case self::PERMANENT_REDIRECT:
-				return '301';
-		}
-
-		throw new \InvalidArgumentException('invalid type', $type);
+		return match ($type) {
+			self::SERVER_REWRITE     => 'Rewrite',
+			self::PERMANENT_REDIRECT => '301',
+			default                  => throw new \InvalidArgumentException('invalid type', $type),
+		};
 	}
 
 }
