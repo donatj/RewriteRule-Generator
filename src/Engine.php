@@ -6,13 +6,11 @@ use donatj\RewriteGenerator\Exceptions\GenerationException;
 
 class Engine {
 
-	private GeneratorInterface $generator;
-
 	private int $lastErrorCount = 0;
 
-	public function __construct( GeneratorInterface $generator ) {
-		$this->generator = $generator;
-	}
+	public function __construct(
+		private readonly GeneratorInterface $generator
+	) {}
 
 	public function generate( string $input, int $type, bool $comments ) : string {
 		$errors = 0;
