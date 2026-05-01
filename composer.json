@@ -23,7 +23,7 @@
 	},
 	"require-dev": {
 		"corpus/coding-standard": "^0.9.0",
-		"donatj/drop": "^1.0",
+		"donatj/drop": "^1.1",
 		"phpstan/extension-installer": "^1.4",
 		"phpstan/phpstan": "^2.1",
 		"phpstan/phpstan-phpunit": "^2.0",
