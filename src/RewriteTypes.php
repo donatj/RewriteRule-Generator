@@ -11,7 +11,7 @@ abstract class RewriteTypes {
 		return match ($type) {
 			self::SERVER_REWRITE     => 'Rewrite',
 			self::PERMANENT_REDIRECT => '301',
-			default                  => throw new \InvalidArgumentException('invalid type', $type),
+			default                  => throw new \InvalidArgumentException('invalid type: ' . $type, $type),
 		};
 	}
 
