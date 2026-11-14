@@ -9,6 +9,7 @@
  */
 
 use donatj\RewriteGenerator\ApacheModRewriteGenerator;
+use donatj\RewriteGenerator\CaddyGenerator;
 use donatj\RewriteGenerator\Engine;
 use donatj\RewriteGenerator\RewriteTypes;
 
@@ -34,8 +35,9 @@ text/faq.html?faq=20	helpdesk/kb.php
 EOD;
 $paramComments = (bool)($_POST ? ($_POST['desc_comments'] ?? false) : true);
 $paramType     = (int)($_POST['type'] ?? RewriteTypes::PERMANENT_REDIRECT);
+$paramServer   = $_POST['server'] ?? 'apache';
 
-$generator = new ApacheModRewriteGenerator;
+$generator = $paramServer === 'caddy' ? new CaddyGenerator : new ApacheModRewriteGenerator;
 
 $engine = new Engine($generator);
 $output = $engine->generate($paramRewrites, $paramType, $paramComments);
@@ -44,6 +46,10 @@ $output = $engine->generate($paramRewrites, $paramType, $paramComments);
 <!DOCTYPE html>
 <form method="post">
 	<textarea id="tsv-input" cols="100" rows="20" name="tabbed_rewrites" style="width: 100%; height: 265px;" title="TSV Input"><?php echo htmlentities($paramRewrites) ?></textarea><br />
+	<select name="server" title="Server">
+		<option value="apache">Apache</option>
+		<option value="caddy"<?= $paramServer === 'caddy' ? ' selected' : '' ?>>Caddy (prototype)</option>
+	</select>
 	<select name="type" title="Rewrite Type">
 		<option value="<?= RewriteTypes::PERMANENT_REDIRECT ?>">301</option>
 		<option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $paramType === RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>
