@@ -51,9 +51,9 @@ $output = $engine->generate($paramRewrites, $paramType, $paramComments);
 			RewriteTypes::SEE_OTHER => '303 - See Other',
 			RewriteTypes::TEMPORARY_REDIRECT_PRESERVE_METHOD => '307 - Temporary, preserve method',
 			RewriteTypes::PERMANENT_REDIRECT_PRESERVE_METHOD => '308 - Permanent, preserve method',
-		] as $type => $label ) : ?>
+		] as $type => $label ) { ?>
 			<option value="<?= $type ?>"<?= $paramType === $type ? ' selected' : '' ?>><?= $label ?></option>
-		<?php endforeach ?>
+		<?php } ?>
 		<option value="<?= RewriteTypes::SERVER_REWRITE ?>" <?php echo $paramType === RewriteTypes::SERVER_REWRITE ? ' selected' : '' ?>>
 			Rewrite
 		</option>
