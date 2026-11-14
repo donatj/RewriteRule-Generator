@@ -68,7 +68,11 @@ class ApacheModRewriteGenerator implements GeneratorInterface {
 
 		return match ($type) {
 			RewriteTypes::SERVER_REWRITE     => "{$output}&%{QUERY_STRING}",
-			RewriteTypes::PERMANENT_REDIRECT => "{$output} [L,R=301]",
+			RewriteTypes::PERMANENT_REDIRECT,
+			RewriteTypes::TEMPORARY_REDIRECT,
+			RewriteTypes::SEE_OTHER,
+			RewriteTypes::TEMPORARY_REDIRECT_PRESERVE_METHOD,
+			RewriteTypes::PERMANENT_REDIRECT_PRESERVE_METHOD => "{$output} [L,R=" . RewriteTypes::name($type) . "]",
 			default                          => throw new InvalidArgumentException("Unhandled RewriteType: {$type}", $type),
 		};
 	}

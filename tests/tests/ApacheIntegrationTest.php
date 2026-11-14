@@ -11,6 +11,27 @@ use PHPUnit\Framework\TestCase;
 class ApacheIntegrationTest extends TestCase {
 
 	/**
+	 * @dataProvider redirectTypeProvider
+	 */
+	public function test_redirect_types( int $type, int $status ) : void {
+		$engine = new Engine(new ApacheModRewriteGenerator);
+
+		$this->assertSame(
+			"# {$status} --- old => new\nRewriteRule ^old$ /new? [L,R={$status}]\n",
+			$engine->generate("old\tnew", $type, true)
+		);
+		$this->assertSame(0, $engine->getLastErrorCount());
+	}
+
+	public function redirectTypeProvider() : Generator {
+		yield [RewriteTypes::PERMANENT_REDIRECT, 301];
+		yield [RewriteTypes::TEMPORARY_REDIRECT, 302];
+		yield [RewriteTypes::SEE_OTHER, 303];
+		yield [RewriteTypes::TEMPORARY_REDIRECT_PRESERVE_METHOD, 307];
+		yield [RewriteTypes::PERMANENT_REDIRECT_PRESERVE_METHOD, 308];
+	}
+
+	/**
 	 * @dataProvider exampleProvider
 	 */
 	public function test_examples( string $input, string $output301, string $outputRewrite ) : void {
